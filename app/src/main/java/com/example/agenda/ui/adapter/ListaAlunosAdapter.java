@@ -37,30 +37,35 @@ public class ListaAlunosAdapter extends BaseAdapter {
     //esse metodo representa a view que vai ser exibida em cada item
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View viewCriada = LayoutInflater
-                .from(parent.getContext())
-                //esse false significa que não somos nos quem vamos fazer o processo de criar a
-                //view e adicionar o layout na viewgroup, mas sim é o adapter que vai fazer
-                .inflate(R.layout.item_aluno, parent, false);
-
+        View viewCriada = criaView(parent);
         Aluno alunoDevolvido = alunos.get(position);
+        vincula(viewCriada, alunoDevolvido);
+        return viewCriada;
+    }
+
+    private void vincula(View viewCriada, Aluno alunoDevolvido) {
         TextView campoNome = viewCriada.findViewById(R.id.item_aluno_nome);
         campoNome.setText(alunoDevolvido.getNome());
         TextView campoTelefone = viewCriada.findViewById(R.id.item_aluno_telefone);
         campoTelefone.setText(alunoDevolvido.getTelefone());
-
-        return viewCriada;
     }
 
-    public void clear() {
-        alunos.clear();
+    private View criaView(ViewGroup parent) {
+        return LayoutInflater
+                .from(parent.getContext())
+                //esse false significa que não somos nos quem vamos fazer o processo de criar a
+                //view e adicionar o layout na viewgroup, mas sim é o adapter que vai fazer
+                .inflate(R.layout.item_aluno, parent, false);
     }
 
-    public void addAll(List<Aluno> alunos) {
+    public void atualiza(List<Aluno> alunos){
+        this.alunos.clear();
         this.alunos.addAll(alunos);
+        notifyDataSetChanged();
     }
 
     public void remove(Aluno aluno) {
         alunos.remove(aluno);
+        notifyDataSetChanged();
     }
 }
