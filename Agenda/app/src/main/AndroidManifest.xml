@@ -3,7 +3,6 @@
     package="com.example.agenda">
 
     <application
-        android:name=".AgendaApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

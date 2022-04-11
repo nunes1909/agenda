@@ -43,11 +43,11 @@ public class ListaAlunosAdapter extends BaseAdapter {
         return viewCriada;
     }
 
-    private void vincula(View viewCriada, Aluno alunoDevolvido) {
+    private void vincula(View viewCriada, Aluno aluno) {
         TextView campoNome = viewCriada.findViewById(R.id.item_aluno_nome);
-        campoNome.setText(alunoDevolvido.getNome());
+        campoNome.setText(aluno.getNome());
         TextView campoTelefone = viewCriada.findViewById(R.id.item_aluno_telefone);
-        campoTelefone.setText(alunoDevolvido.getTelefone());
+        campoTelefone.setText(aluno.getTelefone());
     }
 
     private View criaView(ViewGroup parent) {
