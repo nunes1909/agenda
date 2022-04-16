@@ -9,6 +9,8 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import com.example.agenda.asynctask.BuscaAlunosTask;
+import com.example.agenda.asynctask.RemoveAlunoTask;
 import com.example.agenda.database.AgendaDatabase;
 import com.example.agenda.database.dao.AlunoDAO;
 import com.example.agenda.model.Aluno;
@@ -21,8 +23,8 @@ public class ListaAlunosView {
 
     public ListaAlunosView(Context context) {
         this.context = context;
-        this.adapter = new ListaAlunosAdapter();
-        dao = AgendaDatabase.getInstance(context).getRoomAlunoDAO();
+        this.adapter = new ListaAlunosAdapter(context);
+        dao = AgendaDatabase.getInstance(context).getAlunoDAO();
     }
 
     public void confirmaRemocao(@NonNull MenuItem item) {
@@ -43,14 +45,14 @@ public class ListaAlunosView {
     }
 
     public void atualizaAlunos() {
-        adapter.atualiza(dao.todos());
+        new BuscaAlunosTask(dao, adapter)
+                .execute();
+
     }
 
     public void removeAluno(Aluno alunoEscolhido) {
-        dao.remove(alunoEscolhido);
-        //tornei o adapter atributo de classe, e chamei o metodo remove
-        //esse é um metodo do proprio adapter, e ele remove automaticamente as infos
-        adapter.remove(alunoEscolhido);
+        new RemoveAlunoTask(dao, adapter, alunoEscolhido)
+                .execute();
     }
 
     public void configuraAdapter(ListView listaDeAlunos) {

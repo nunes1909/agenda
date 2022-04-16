@@ -1,5 +1,6 @@
 package com.example.agenda.ui.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.agenda.R;
+import com.example.agenda.asynctask.BuscaPrimeiroTelefoneDoAlunoTask;
+import com.example.agenda.database.AgendaDatabase;
+import com.example.agenda.database.dao.TelefoneDAO;
 import com.example.agenda.model.Aluno;
 
 import java.util.ArrayList;
@@ -15,6 +19,13 @@ import java.util.List;
 public class ListaAlunosAdapter extends BaseAdapter {
 
     private final List<Aluno> alunos = new ArrayList<>();
+    private final Context context;
+    private final TelefoneDAO dao;
+
+    public ListaAlunosAdapter(Context context) {
+        this.context = context;
+        dao = AgendaDatabase.getInstance(context).getTelefoneDAO();
+    }
 
     //esse metodo representa o tamanho, ou, a quantidade de itens
     @Override
@@ -47,7 +58,10 @@ public class ListaAlunosAdapter extends BaseAdapter {
         TextView campoNome = viewCriada.findViewById(R.id.item_aluno_nome);
         campoNome.setText(aluno.getNome());
         TextView campoTelefone = viewCriada.findViewById(R.id.item_aluno_telefone);
-        campoTelefone.setText(aluno.getTelefone());
+
+        new BuscaPrimeiroTelefoneDoAlunoTask(dao, aluno, telefoneEncontrado -> {
+            campoTelefone.setText(telefoneEncontrado.getNumero());
+        }).execute();
     }
 
     private View criaView(ViewGroup parent) {
@@ -58,7 +72,7 @@ public class ListaAlunosAdapter extends BaseAdapter {
                 .inflate(R.layout.item_aluno, parent, false);
     }
 
-    public void atualiza(List<Aluno> alunos){
+    public void atualiza(List<Aluno> alunos) {
         this.alunos.clear();
         this.alunos.addAll(alunos);
         notifyDataSetChanged();

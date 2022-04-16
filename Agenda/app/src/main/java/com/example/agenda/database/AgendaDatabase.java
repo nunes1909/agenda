@@ -10,21 +10,27 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.example.agenda.database.converter.ConversorCalendar;
+import com.example.agenda.database.converter.ConversorTipoTelefone;
 import com.example.agenda.database.dao.AlunoDAO;
+import com.example.agenda.database.dao.TelefoneDAO;
 import com.example.agenda.model.Aluno;
+import com.example.agenda.model.Telefone;
 
-@Database(entities = {Aluno.class}, version = 4, exportSchema = false)
-@TypeConverters({ConversorCalendar.class})
+@Database(entities = {Aluno.class, Telefone.class}, version = 6, exportSchema = false)
+@TypeConverters({ConversorCalendar.class, ConversorTipoTelefone.class})
 public abstract class AgendaDatabase extends RoomDatabase {
 
     private static final String NOME_BANCO_DADOS = "agenda.db";
 
-    public abstract AlunoDAO getRoomAlunoDAO();
+    public abstract AlunoDAO getAlunoDAO();
+    public abstract TelefoneDAO getTelefoneDAO();
 
     public static AgendaDatabase getInstance(Context context) {
         return Room
                 .databaseBuilder(context, AgendaDatabase.class, NOME_BANCO_DADOS)
-                .allowMainThreadQueries()
+                //esse metodo permite a execução do banco na thread principal
+                //.allowMainThreadQueries()
+
                 //esse metodo destoi a versao anterior do db, e refaz com a nova versão
                 //so deve ser usado quando o app estiver sendo usado somente quando nao
                 //existir a versão de produção
@@ -36,4 +42,5 @@ public abstract class AgendaDatabase extends RoomDatabase {
                 .addMigrations(TODAS_MIGRATIONS)
                 .build();
     }
+
 }
